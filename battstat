@@ -10,9 +10,19 @@ PERCENT=${PERCENT%?} # Strips the last character (;)
 CHARGING_ICON="\xe2\x9a\xa1"
 DISCHARGING_ICON="\xf0\x9f\x94\x8b"
 
-# Hide time remaining when battery is charged.
+# Hide time when battery is charged.
 if [[ ! -z $CHARGED ]]; then
     TIME=""
+fi
+
+# Hide time when calculating an estimate.
+if [[ -z $TIME || $TIME = "0:00" ]] ; then
+    TIME="calc..."
+fi
+
+# Only show percentage when battery is charged 100%.
+if [[ -z $CHARGED ]]; then
+    PERCENT=""
 fi
 
 if [[ ! -z $CHARGING ]]; then
@@ -23,4 +33,4 @@ if [[ ! -z $DISCHARGING ]]; then
     ICON=$DISCHARGING_ICON
 fi
 
-echo "$ICON  $TIME $PERCENT"
+echo "$ICON  $TIME$PERCENT"
