@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+
+CHARGED=$(pmset -g batt | grep -w "charged")
+CHARGING=$(pmset -g batt | grep -w "AC Power")
+DISCHARGING=$(pmset -g batt | grep -w "Battery Power")
+TIME=$(pmset -g batt | grep InternalBattery | awk '{print $5}' | grep '^[0-9]')
+PERCENT=$(pmset -g batt | grep InternalBattery | awk '{print $3}')
+PERCENT=${PERCENT%?} # Strips the last character (;)
+
+CHARGING_ICON="\xe2\x9a\xa1"
+DISCHARGING_ICON="\xf0\x9f\x94\x8b"
+
+# Hide time remaining when battery is charged.
+if [[ ! -z $CHARGED ]]; then
+    TIME=""
+fi
+
+if [[ ! -z $CHARGING ]]; then
+    ICON=$CHARGING_ICON
+fi
+
+if [[ ! -z $DISCHARGING ]]; then
+    ICON=$DISCHARGING_ICON
+fi
+
+echo "$ICON  $TIME $PERCENT"
