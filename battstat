@@ -1,5 +1,12 @@
 #!/usr/bin/env sh
 
+# No battery found.
+if [[ -z $(pmset -g batt | grep "InternalBattery") ]]; then
+    echo "No battery found."
+    exit 1
+fi
+
+# Define some variables.
 CHARGED=$(pmset -g batt | grep -w "charged")
 CHARGING=$(pmset -g batt | grep -w "AC Power")
 DISCHARGING=$(pmset -g batt | grep -w "Battery Power")
