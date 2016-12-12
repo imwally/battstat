@@ -17,14 +17,14 @@ PERCENT=${PERCENT%?} # Strips the last character (;)
 CHARGING_ICON="\xe2\x9a\xa1"
 DISCHARGING_ICON="\xf0\x9f\x94\x8b"
 
-# Hide time when battery is charged.
-if [[ ! -z $CHARGED ]]; then
-    TIME=""
-fi
-
 # Hide time when calculating an estimate.
 if [[ -z $TIME || $TIME = "0:00" ]] ; then
     TIME="calc..."
+fi
+
+# Hide time when battery is charged.
+if [[ ! -z $CHARGED ]]; then
+    TIME=""
 fi
 
 # Only show percentage when battery is charged 100%.
