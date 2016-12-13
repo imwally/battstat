@@ -27,7 +27,7 @@ case $UNAME in
 	;;
 esac
 
-# Hide time when calculating an estimate.
+# Display "calc..." when calculating time remaining.
 if [[ -z $TIME || $TIME = "0:00" ]] ; then
     TIME="calc..."
 fi
