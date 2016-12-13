@@ -2,8 +2,8 @@
 
 UNAME=$(uname)
 
-CHARGING_ICON="\xe2\x9a\xa1"        # Thunderbolt
-DISCHARGING_ICON="\xf0\x9f\x94\x8b" # Battery
+CHARGING_ICON="⚡"     #  U+26A1 -  Thunderbolt
+DISCHARGING_ICON="🔋" # U+1F50B - Battery
 
 case $UNAME in
     "Darwin")
