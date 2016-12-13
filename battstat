@@ -21,6 +21,10 @@ case $UNAME in
 	PERCENT=$(pmset -g batt | grep InternalBattery | awk '{print $3}')
 	PERCENT=${PERCENT%?} # Strips the last character (;)
 	;;
+    "Linux")
+	echo "Linux is currently not supported."
+	exit 1
+	;;
 esac
 
 # Hide time when calculating an estimate.
