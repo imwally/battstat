@@ -20,6 +20,12 @@ print_help() {
 }
 
 get_darwin_vars() {
+    # Exit if no battery exists.
+    if [ -z "$(pmset -g batt | grep 'InternalBattery')" ]; then
+	echo "No battery found."
+	exit 1
+    fi
+
     CHARGED=$(pmset -g batt | grep -w "charged")
     CHARGING=$(pmset -g batt | grep -w "AC Power")
     DISCHARGING=$(pmset -g batt | grep -w "Battery Power")
@@ -29,6 +35,13 @@ get_darwin_vars() {
 }
 
 get_linux_vars() {
+    # Exit if no batery exists.
+    BATTERY_SYSFS_PATH="/sys/class/power_supply/BAT0"
+    if [ ! -d "$BATTERY_SYSFS_PATH" ]; then
+	echo "No battery found."
+	exit 1
+    fi
+
     CHARGED=$(cat $BATTERY_SYSFS_PATH/status | grep -w "Full")
     CHARGING=$(cat $BATTERY_SYSFS_PATH/status | grep -w "Charging")
     DISCHARGING=$(cat $BATTERY_SYSFS_PATH/status | grep -w "Discharging")
@@ -78,25 +91,11 @@ print_percent() {
 
 case $(uname) in
     "Darwin")
-	# Exit if no battery exists.
-	if [ -z "$(pmset -g batt | grep 'InternalBattery')" ]; then
-	    echo "No battery found."
-	    exit 1
-	fi
-
 	get_darwin_vars
 	;;
     "Linux")
 	echo "Linux is currently not supported."
 	exit 1
-		
-	# Exit if no batery exists.
-	BATTERY_SYSFS_PATH="/sys/class/power_supply/BAT0"
-	if [ ! -d "$BATTERY_SYSFS_PATH" ]; then
-	    echo "No battery found."
-	    exit 1
-	fi
-
 	get_linux_vars
 	;;
 esac
