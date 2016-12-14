@@ -6,15 +6,19 @@ CHARGING_ICON="⚡"     #  U+26A1 -  Thunderbolt
 DISCHARGING_ICON="🔋" # U+1F50B - Battery
 
 print_help() {
-    echo "usage: battstat [options]"
+    echo "usage: battstat [options] format"
     echo ""
     echo "options:"
-    echo "    -h    display help information"
-    echo "    -i    display icon"
-    echo "    -t    display time remaining"
-    echo "    -p    display percent"
-    echo ""
+    echo "    -h, --help                display help information"
     echo "    --percent-when-charged    only display percent when charged"
+    echo ""
+    echo "format:"
+    echo "    {i}    display icon"
+    echo "    {t}    display time remaining"
+    echo "    {p}    display percent"
+    echo ""
+    echo "    Note: There must be a space between each format token."
+
 }
 
 get_darwin_vars() {
@@ -33,12 +37,6 @@ get_linux_vars() {
     TIME=""
     PERCENT=$(cat $BATTERY_SYSFS_PATH/capacity)
     PERCENT="$PERCENT%"
-}
-
-hide_time_when_charged() {
-    if [ ! -z "$CHARGED" ]; then
-	TIME=""
-    fi
 }
 
 hide_percent_until_charged() {
@@ -63,9 +61,15 @@ print_time() {
 	TIME="calc..."
     fi
 
+    # Hide time when fully charged.
+    if [ ! -z "$CHARGED" ]; then
+	TIME=""
+    fi
+    
     if [ ! -z "$TIME" ]; then
 	printf " %s " $TIME
     fi
+
 }
 
 print_percent() {
@@ -113,16 +117,15 @@ while test $# -gt 0; do
 	    hide_percent_until_charged
 	    shift
 	    ;;
-	-i)
+	{i})
 	    print_icon
 	    shift
 	    ;;
-	-t)
-	    hide_time_when_charged
+	{t})
 	    print_time
 	    shift
 	    ;;
-	-p)
+	{p})
 	    print_percent
 	    shift
 	    ;;
