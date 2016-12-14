@@ -1,7 +1,5 @@
 #!/usr/bin/env sh
 
-UNAME=$(uname)
-
 CHARGING_ICON="⚡"     #  U+26A1 -  Thunderbolt
 DISCHARGING_ICON="🔋" # U+1F50B - Battery
 
@@ -78,7 +76,7 @@ print_percent() {
     fi
 }
 
-case $UNAME in
+case $(uname) in
     "Darwin")
 	# Exit if no battery exists.
 	if [ -z "$(pmset -g batt | grep 'InternalBattery')" ]; then
