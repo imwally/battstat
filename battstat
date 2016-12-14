@@ -5,6 +5,75 @@ UNAME=$(uname)
 CHARGING_ICON="⚡"     #  U+26A1 -  Thunderbolt
 DISCHARGING_ICON="🔋" # U+1F50B - Battery
 
+print_help() {
+    echo "usage: battstat [options]"
+    echo ""
+    echo "options:"
+    echo "    -h    display help information"
+    echo "    -i    display icon"
+    echo "    -t    display time remaining"
+    echo "    -p    display percent"
+    echo ""
+    echo "    --percent-when-charged    only display percent when charged"
+}
+
+get_darwin_vars() {
+    CHARGED=$(pmset -g batt | grep -w "charged")
+    CHARGING=$(pmset -g batt | grep -w "AC Power")
+    DISCHARGING=$(pmset -g batt | grep -w "Battery Power")
+    TIME=$(pmset -g batt | grep InternalBattery | awk '{print $5}' | grep '^[0-9]')
+    PERCENT=$(pmset -g batt | grep InternalBattery | awk '{print $3}')
+    PERCENT=${PERCENT%?} # Strips the last character (;)
+}
+
+get_linux_vars() {
+    CHARGED=$(cat $BATTERY_SYSFS_PATH/status | grep -w "Full")
+    CHARGING=$(cat $BATTERY_SYSFS_PATH/status | grep -w "Charging")
+    DISCHARGING=$(cat $BATTERY_SYSFS_PATH/status | grep -w "Discharging")
+    TIME=""
+    PERCENT=$(cat $BATTERY_SYSFS_PATH/capacity)
+    PERCENT="$PERCENT%"
+}
+
+hide_time_when_charged() {
+    if [ ! -z "$CHARGED" ]; then
+	TIME=""
+    fi
+}
+
+hide_percent_until_charged() {
+    if [ -z "$CHARGED" ]; then
+	PERCENT=""
+    fi
+}   
+
+print_icon() {
+    if [ ! -z "$CHARGING" ] || [ ! -z $CHARGED ]; then
+	ICON=$CHARGING_ICON
+    elif [ ! -z "$DISCHARGING" ]; then
+	ICON=$DISCHARGING_ICON
+    fi
+
+    printf " %s " $ICON
+}
+
+print_time() {
+    # Display "calc..." when calculating time remaining.
+    if [ -z "$TIME" ] || [ $TIME = "0:00" ]; then
+	TIME="calc..."
+    fi
+
+    if [ ! -z "$TIME" ]; then
+	printf " %s " $TIME
+    fi
+}
+
+print_percent() {
+    if [ ! -z "$PERCENT" ]; then
+	printf " %s " $PERCENT
+    fi
+}
+
 case $UNAME in
     "Darwin")
 	# Exit if no battery exists.
@@ -13,13 +82,7 @@ case $UNAME in
 	    exit 1
 	fi
 
-	# Define Darwin variables.
-	CHARGED=$(pmset -g batt | grep -w "charged")
-	CHARGING=$(pmset -g batt | grep -w "AC Power")
-	DISCHARGING=$(pmset -g batt | grep -w "Battery Power")
-	TIME=$(pmset -g batt | grep InternalBattery | awk '{print $5}' | grep '^[0-9]')
-	PERCENT=$(pmset -g batt | grep InternalBattery | awk '{print $3}')
-	PERCENT=${PERCENT%?} # Strips the last character (;)
+	get_darwin_vars
 	;;
     "Linux")
 	echo "Linux is currently not supported."
@@ -32,37 +95,42 @@ case $UNAME in
 	    exit 1
 	fi
 
-	# Define Linux variables. These are currently collected via sysfs.
-	CHARGED=$(cat $BATTERY_SYSFS_PATH/status | grep -w "Full")
-	CHARGING=$(cat $BATTERY_SYSFS_PATH/status | grep -w "Charging")
-	DISCHARGING=$(cat $BATTERY_SYSFS_PATH/status | grep -w "Discharging")
-	TIME=""
-	PERCENT=$(cat $BATTERY_SYSFS_PATH/capacity)
-	PERCENT="$PERCENT%"
+	get_linux_vars
 	;;
 esac
 
-# Display "calc..." when calculating time remaining.
-if [ -z "$TIME" ] || [ $TIME = "0:00" ]; then
-    TIME="calc..."
+if [ $# -eq 0 ]; then
+    print_help
 fi
 
-# Hide time when battery is charged.
-if [ ! -z "$CHARGED" ]; then
-    TIME=""
-fi
+while test $# -gt 0; do
+    case "$1" in
+	-h|--help)
+	    print_help
+	    break
+	    ;;
+	--percent-when-charged)
+	    hide_percent_until_charged
+	    shift
+	    ;;
+	-i)
+	    print_icon
+	    shift
+	    ;;
+	-t)
+	    hide_time_when_charged
+	    print_time
+	    shift
+	    ;;
+	-p)
+	    print_percent
+	    shift
+	    ;;
+	*)
+	    print_help
+	    break
+	    ;;
+    esac
+done
 
-# Only show percentage when battery is charged 100%.
-if [ -z "$CHARGED" ]; then
-    PERCENT=""
-fi
-
-if [ ! -z "$CHARGING" ] || [ ! -z $CHARGED ]; then
-    ICON=$CHARGING_ICON
-fi
-
-if [ ! -z "$DISCHARGING" ]; then
-    ICON=$DISCHARGING_ICON
-fi
-
-echo "$ICON  $TIME$PERCENT"
+printf "\n"
