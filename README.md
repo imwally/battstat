@@ -1,17 +1,35 @@
 # battstat
 
-This is a tiny shell script that displays the status of your battery along with an icon indicating whether it's charging or discharging as well as the time remaining. Currently macOS is 100% supported while Linux is not too far behind.
+`battstat` is a tiny shell script that displays formatted information about the status of your battery. It's best when used as apart of your _tmux_ status line. Really though, any place where a shell script can be executed should work just as well.
+
+Information is displayed in the order the format tokens are written. For example, the command given in the screnshots below is `battstat --percent-when-charged {i} {t} {p}`. This will display an icon, the time remaining when charging and discharging, and finally the percentage but only when the battery is fully charged. Format tokens can be written in any order and as many times as you like, although I'm not sure why you would use more than one of each at a time.
+
+![battery charging](https://github.com/imwally/battstat/raw/master/img/charging.png)
+![battery discharging](https://github.com/imwally/battstat/raw/master/img/discharging.png)
+
+The following Operating Systems are supported.
 
 ### macOS
 
-Battery details are collected via `pmset(1)`.
+Details are collected via `pmset(1)`.
 
 ### Linux
 
-Power information is collected via sysfs.
+Details are collected via [sysfs](https://en.wikipedia.org/wiki/Sysfs).
 
-### Charging
-![battery charging](https://github.com/imwally/battstat/raw/master/img/charging.png)
+### Usage
 
-### Discharging
-![battery discharging](https://github.com/imwally/battstat/raw/master/img/discharging.png)
+```
+usage: battstat [options] format
+
+options:
+    -h, --help                display help information
+    --percent-when-charged    only display percent when charged
+
+format:
+    {i}    display icon
+    {t}    display time remaining
+    {p}    display percent
+
+    Note: There must be a space between each format token.
+```
