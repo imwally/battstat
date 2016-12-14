@@ -8,15 +8,17 @@ Information is displayed in the order the format tokens are written. For example
 ![battery discharging](https://github.com/imwally/battstat/raw/master/img/discharging.png)
 ![battery full charged](https://github.com/imwally/battstat/raw/master/img/charged.png)
 
-The following Operating Systems are supported.
+The following Operating Systems are supported (almost).
 
-### macOS
+### macOS 100%
 
 Details are collected via `pmset(1)`.
 
-### Linux
+### Linux 99%
 
 Details are collected via [sysfs](https://en.wikipedia.org/wiki/Sysfs).
+
+_Note: Finding the time remaining is the only outstanding problem. The rest of the code is in place and ready to go._
 
 ### Usage
 
