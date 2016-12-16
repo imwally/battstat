@@ -20,6 +20,21 @@ Details are collected via [sysfs](https://en.wikipedia.org/wiki/Sysfs).
 
 _Note: Finding the time remaining is the only outstanding problem. The rest of the code is in place and ready to go._
 
+### Install
+
+First grab the script. Here are a few options:
+
+      * Download and extract the [zip](https://github.com/imwally/battstat/archive/master.zip).
+      * `$ git clone https://github.com/imwally/battstat.git`
+      * `$ curl -O https://raw.githubusercontent.com/imwally/battstat/master/battstat`
+
+Then move it to your favorite binary path and make it executable.
+
+```
+$ mv battstat /usr/local/bin
+$ chmod u+x /usr/local/bin/battstat
+```
+
 ### Usage
 
 ```
