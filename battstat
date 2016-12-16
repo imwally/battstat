@@ -89,6 +89,11 @@ print_percent() {
     fi
 }
 
+if [ $# -eq 0 ]; then
+    print_help
+    exit 0
+fi
+
 case $(uname) in
     "Darwin")
 	get_darwin_vars
@@ -99,10 +104,6 @@ case $(uname) in
 	get_linux_vars
 	;;
 esac
-
-if [ $# -eq 0 ]; then
-    print_help
-fi
 
 while test $# -gt 0; do
     case "$1" in
