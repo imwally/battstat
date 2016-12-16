@@ -24,7 +24,7 @@ _Note: Finding the time remaining is the only outstanding problem. The rest of t
 
 First grab the script. Here are a few options:
 
-* Download and extract the [zip](https://github.com/imwally/battstat/archive/master.
+* Download and extract the [zip](https://github.com/imwally/battstat/archive/master.zip).
 * `$ git clone https://github.com/imwally/battstat`
 * `$ curl -O https://raw.githubusercontent.com/imwally/battstat/master/battstat`
 
