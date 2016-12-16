@@ -20,7 +20,7 @@ Details are collected via [sysfs](https://en.wikipedia.org/wiki/Sysfs).
 
 _Note: Finding the time remaining is the only outstanding problem. The rest of the code is in place and ready to go._
 
-### Install
+## Install
 
 First grab the script. Here are a few options:
 
@@ -35,7 +35,7 @@ $ mv battstat /usr/local/bin
 $ chmod u+x /usr/local/bin/battstat
 ```
 
-### Usage
+## Usage
 
 ```
 usage: battstat [options] format
