@@ -115,6 +115,16 @@ while test $# -gt 0; do
 	    hide_percent_until_charged
 	    shift
 	    ;;
+	-c|--charging-icon)
+	    CHARGING_ICON="$2"
+	    shift
+	    shift
+	    ;;
+	-d|--discharging-icon)
+	    DISCHARGING_ICON="$2"
+	    shift
+	    shift
+	    ;;
 	{i})
 	    print_icon
 	    shift
