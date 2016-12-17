@@ -8,6 +8,8 @@ print_help() {
     echo ""
     echo "options:"
     echo "    -h, --help                display help information"
+    echo "    -c, --charging-icon       string to display when battery is charging"
+    echo "    -d, --discharging-icon    string to display when battery is discharging"
     echo "    --percent-when-charged    only display percent when charged"
     echo ""
     echo "format:"
