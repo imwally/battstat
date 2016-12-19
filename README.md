@@ -31,17 +31,15 @@ $ battstat -d "Battery:" {i} {p}
 
 ## Supported Operating Systems
 
-The following Operating Systems are supported (almost):
+The following Operating Systems are supported:
 
 __macOS 100%__
 
 Details are collected via `pmset(1)`.
 
-__Linux 99%__
+__Linux 100%__
 
-Details are collected via [sysfs](https://en.wikipedia.org/wiki/Sysfs).
-
-_Note: Finding the time remaining is the only outstanding problem. The rest of the code is in place and ready to go._
+Details are collected via [upower](https://upower.freedesktop.org/).
 
 ## Install
 
