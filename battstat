@@ -38,18 +38,19 @@ get_darwin_vars() {
 
 get_linux_vars() {
     # Exit if no batery exists.
-    BATTERY_SYSFS_PATH="/sys/class/power_supply/BAT0"
-    if [ ! -d "$BATTERY_SYSFS_PATH" ]; then
+    if [ -z "$(upower -e | grep 'BAT')" ]; then
 	echo "No battery found."
 	exit 1
     fi
 
-    CHARGED=$(cat $BATTERY_SYSFS_PATH/status | grep -w "Full")
-    CHARGING=$(cat $BATTERY_SYSFS_PATH/status | grep -w "Charging")
-    DISCHARGING=$(cat $BATTERY_SYSFS_PATH/status | grep -w "Discharging")
-    TIME=""
-    PERCENT=$(cat $BATTERY_SYSFS_PATH/capacity)
-    PERCENT="$PERCENT%"
+    CHARGED=$(upower -i $(upower -e | grep 'BAT') | grep 'state' | grep -w 'full')
+    CHARGING=$(upower -i $(upower -e | grep 'BAT') | grep 'state' | grep -w 'charging')
+    DISCHARGING=$(upower -i $(upower -e | grep 'BAT') | grep 'state' | grep -w 'discharging')
+    HOURS=$(upower -i $(upower -e | grep 'BAT') | grep 'time' | awk '{print $4}' | cut -d . -f1)
+    MINUTES=$(upower -i $(upower -e | grep 'BAT') | grep 'time' | awk '{print $4}' | cut -d . -f2)
+    MINUTES=$(echo .$MINUTES \* 60 | bc -l | cut -d. -f1)
+    TIME=$HOURS:$MINUTES
+    PERCENT=$(upower -i $(upower -e | grep 'BAT') | grep 'percentage' | awk '{print $2}')
 }
 
 hide_percent_until_charged() {
@@ -101,8 +102,6 @@ case $(uname) in
 	get_darwin_vars
 	;;
     "Linux")
-	echo "Linux is currently not supported."
-	exit 1
 	get_linux_vars
 	;;
 esac
