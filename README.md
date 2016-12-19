@@ -8,13 +8,36 @@ Information is displayed in the order the format tokens are written. For example
 ![battery discharging](https://github.com/imwally/battstat/raw/master/img/discharging.png)
 ![battery full charged](https://github.com/imwally/battstat/raw/master/img/charged.png)
 
-The following Operating Systems are supported (almost).
+## Examples
 
-### macOS 100%
+There are a few ways to customize the output of `battstat`. Charging and discharging icons can be replaced with single character or multi-character strings.
+
+```
+$ battstat -d "🍕" {t} {i}
+ 10:30  🍕
+
+$ battstat {t} {i}
+ 11:47  🔋
+
+$ battstat -c "AC:" -d "BAT:" {i} {p} {t}
+ BAT:  82%  12:11
+
+$ battstat {i} {p}    
+ 🔋  81%
+
+$ battstat -d "Battery:" {i} {p}
+ Battery:  81%
+```
+
+## Supported Operating Systems
+
+The following Operating Systems are supported (almost):
+
+__macOS 100%__
 
 Details are collected via `pmset(1)`.
 
-### Linux 99%
+__Linux 99%__
 
 Details are collected via [sysfs](https://en.wikipedia.org/wiki/Sysfs).
 
