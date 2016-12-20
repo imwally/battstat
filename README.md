@@ -33,13 +33,8 @@ $ battstat -d "Battery:" {i} {p}
 
 The following Operating Systems are supported:
 
-__macOS 100%__
-
-Details are collected via `pmset(1)`.
-
-__Linux 100%__
-
-Details are collected via [upower](https://upower.freedesktop.org/).
+* __macOS__: Details are collected via `pmset(1)`.
+* __Linux__: Details are collected via `upower(1)`.
 
 ## Install
 
