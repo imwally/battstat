@@ -43,7 +43,7 @@ get_linux_vars() {
 	exit 1
     fi
 
-    CHARGED=$(upower -i $(upower -e | grep 'BAT') | grep 'state' | grep -w 'full')
+    CHARGED=$(upower -i $(upower -e | grep 'BAT') | grep 'state' | grep -w 'fully-charged')
     CHARGING=$(upower -i $(upower -e | grep 'BAT') | grep 'state' | grep -w 'charging')
     DISCHARGING=$(upower -i $(upower -e | grep 'BAT') | grep 'state' | grep -w 'discharging')
     HOURS=$(upower -i $(upower -e | grep 'BAT') | grep 'time' | awk '{print $4}' | cut -d . -f1)
@@ -60,7 +60,7 @@ hide_percent_until_charged() {
 }   
 
 print_icon() {
-    if [ ! -z "$CHARGING" ] || [ ! -z $CHARGED ]; then
+    if [ ! -z "$CHARGING" ] || [ ! -z "$CHARGED" ]; then
 	ICON=$CHARGING_ICON
     elif [ ! -z "$DISCHARGING" ]; then
 	ICON=$DISCHARGING_ICON
