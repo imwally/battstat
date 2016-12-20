@@ -22,40 +22,44 @@ print_help() {
 }
 
 get_darwin_vars() {
+    BATTERY_DETAILS=$(pmset -g batt)
+
     # Exit if no battery exists.
-    if [ -z "$(pmset -g batt | grep 'InternalBattery')" ]; then
+    if [ -z "$(echo \"$BATTERY_DETAILS\" | grep InternalBattery)" ]; then
 	echo "No battery found."
 	exit 1
     fi
-
-    CHARGED=$(pmset -g batt | grep -w "charged")
-    CHARGING=$(pmset -g batt | grep -w "AC Power")
-    DISCHARGING=$(pmset -g batt | grep -w "Battery Power")
-    TIME=$(pmset -g batt | grep InternalBattery | awk '{print $5}' | grep '^[0-9]')
-    PERCENT=$(pmset -g batt | grep InternalBattery | awk '{print $3}')
+    
+    CHARGED=$(echo "$BATTERY_DETAILS" | grep -w 'charged')
+    CHARGING=$(echo "$BATTERY_DETAILS" | grep -w 'AC Power')
+    DISCHARGING=$(echo "$BATTERY_DETAILS" | grep -w 'Battery Power')
+    TIME=$(echo "$BATTERY_DETAILS" | grep 'InternalBattery' | awk '{print $5}' | grep '^[0-9]')
+    PERCENT=$(echo "$BATTERY_DETAILS" | grep 'InternalBattery' | awk '{print $3}')
     PERCENT=${PERCENT%?} # Strips the last character (;)
 }
 
 get_linux_vars() {
+    BATTERY_DETAILS=$(upower -i $(upower -e | grep 'BAT'))
+    
     # Exit if no batery exists.
-    if [ -z "$(upower -e | grep 'BAT')" ]; then
+    if [ -z "$BATTERY_DETAILS" ]; then
 	echo "No battery found."
 	exit 1
     fi
-
-    CHARGED=$(upower -i $(upower -e | grep 'BAT') | grep 'state' | grep -w 'fully-charged')
-    CHARGING=$(upower -i $(upower -e | grep 'BAT') | grep 'state' | grep -w 'charging')
-    DISCHARGING=$(upower -i $(upower -e | grep 'BAT') | grep 'state' | grep -w 'discharging')
-    PERCENT=$(upower -i $(upower -e | grep 'BAT') | grep 'percentage' | awk '{print $2}')
     
-    case $(upower -i $(upower -e | grep 'BAT') | grep 'time' | awk '{print $5}') in
+    CHARGED=$(echo "$BATTERY_DETAILS" | grep 'state' | grep -w 'fully-charged')
+    CHARGING=$(echo "$BATTERY_DETAILS" | grep 'state' | grep -w 'charging')
+    DISCHARGING=$(echo "$BATTERY_DETAILS" | grep 'state' | grep -w 'discharging')
+    PERCENT=$(echo "$BATTERY_DETAILS"| grep 'percentage' | awk '{print $2}')
+    
+    case $(echo "$BATTERY_DETAILS" | grep 'time' | awk '{print $5}') in
 	"hours")
-	    HOURS=$(upower -i $(upower -e | grep 'BAT') | grep 'time' | awk '{print $4}' | cut -d . -f1)
-	    MINUTES=$(upower -i $(upower -e | grep 'BAT') | grep 'time' | awk '{print $4}' | cut -d . -f2)
+	    HOURS=$(echo "$BATTERY_DETAILS" | grep 'time' | awk '{print $4}' | cut -d . -f1)
+	    MINUTES=$(echo "$BATTERY_DETAILS" | grep 'time' | awk '{print $4}' | cut -d . -f2)
 	    MINUTES=$(echo .$MINUTES \* 60 | bc -l | cut -d. -f1)
 	    ;;
 	"minutes")
-	    MINUTES=$(upower -i $(upower -e | grep 'BAT') | grep 'time' | awk '{print $4}' | cut -d . -f1)
+	    MINUTES=$(echo "$BATTERY_DETAILS" | grep 'time' | awk '{print $4}' | cut -d . -f1)
 	    ;;
     esac
 
