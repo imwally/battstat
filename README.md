@@ -31,8 +31,6 @@ $ battstat -d "Battery:" {i} {p}
 
 ## Supported Operating Systems
 
-The following Operating Systems are supported:
-
 * __macOS__: Details are collected via `pmset(1)`.
 * __Linux__: Details are collected via `upower(1)`.
 
