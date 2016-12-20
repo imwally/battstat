@@ -46,11 +46,30 @@ get_linux_vars() {
     CHARGED=$(upower -i $(upower -e | grep 'BAT') | grep 'state' | grep -w 'fully-charged')
     CHARGING=$(upower -i $(upower -e | grep 'BAT') | grep 'state' | grep -w 'charging')
     DISCHARGING=$(upower -i $(upower -e | grep 'BAT') | grep 'state' | grep -w 'discharging')
-    HOURS=$(upower -i $(upower -e | grep 'BAT') | grep 'time' | awk '{print $4}' | cut -d . -f1)
-    MINUTES=$(upower -i $(upower -e | grep 'BAT') | grep 'time' | awk '{print $4}' | cut -d . -f2)
-    MINUTES=$(echo .$MINUTES \* 60 | bc -l | cut -d. -f1)
-    TIME=$HOURS:$MINUTES
     PERCENT=$(upower -i $(upower -e | grep 'BAT') | grep 'percentage' | awk '{print $2}')
+    
+    case $(upower -i $(upower -e | grep 'BAT') | grep 'time' | awk '{print $5}') in
+	"hours")
+	    HOURS=$(upower -i $(upower -e | grep 'BAT') | grep 'time' | awk '{print $4}' | cut -d . -f1)
+	    MINUTES=$(upower -i $(upower -e | grep 'BAT') | grep 'time' | awk '{print $4}' | cut -d . -f2)
+	    MINUTES=$(echo .$MINUTES \* 60 | bc -l | cut -d. -f1)
+	    ;;
+	"minutes")
+	    MINUTES=$(upower -i $(upower -e | grep 'BAT') | grep 'time' | awk '{print $4}' | cut -d . -f1)
+	    ;;
+    esac
+
+    # Diplay 0 in the hours spot when only minutes remain.
+    if [ -z "$HOURS" ]; then
+	HOURS="0"
+    fi
+
+    # Prefix 0 when minutes drop below 10.
+    if [ $(printf "%s" $MINUTES | wc -c) -eq '1' ]; then
+	MINUTES="0$MINUTES"
+    fi
+    
+    TIME=$HOURS:$MINUTES
 }
 
 hide_percent_until_charged() {
