@@ -115,7 +115,7 @@ print_percent() {
     fi
 }
 
-if [ $# -eq 0 ]; then
+if [ $# -eq 0 ] || [ $1 = "-h" ] || [ $1 = "--help" ]; then
     print_help
     exit 0
 fi
@@ -131,10 +131,6 @@ esac
 
 while test $# -gt 0; do
     case "$1" in
-	-h|--help)
-	    print_help
-	    break
-	    ;;
 	--percent-when-charged)
 	    hide_percent_until_charged
 	    shift
