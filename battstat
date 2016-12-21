@@ -21,13 +21,17 @@ print_help() {
 
 }
 
+exit_no_battery() {
+    echo "battstat: no battery found"
+    exit 1
+}
+
 get_darwin_vars() {
     BATTERY_DETAILS=$(pmset -g batt)
 
     # Exit if no battery exists.
     if [ -z "$(echo \"$BATTERY_DETAILS\" | grep InternalBattery)" ]; then
-	echo "No battery found."
-	exit 1
+	exit_no_battery
     fi
     
     CHARGED=$(echo "$BATTERY_DETAILS" | grep -w 'charged')
@@ -43,8 +47,7 @@ get_linux_vars() {
     
     # Exit if no batery exists.
     if [ -z "$BATTERY_DETAILS" ]; then
-	echo "No battery found."
-	exit 1
+	exit_no_battery
     fi
     
     CHARGED=$(echo "$BATTERY_DETAILS" | grep 'state' | grep -w 'fully-charged')
