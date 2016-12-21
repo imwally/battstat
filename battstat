@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-CHARGING_ICON="⚡"     #  U+26A1 -  Thunderbolt
+CHARGING_ICON="⚡"     #  U+26A1 - Thunderbolt
 DISCHARGING_ICON="🔋" # U+1F50B - Battery
 
 print_help() {
