@@ -26,7 +26,7 @@ exit_no_battery() {
     exit 1
 }
 
-get_darwin_vars() {
+get_darwin_details() {
     BATTERY_DETAILS=$(pmset -g batt)
 
     # Exit if no battery exists.
@@ -42,7 +42,7 @@ get_darwin_vars() {
     PERCENT=${PERCENT%?} # Strips the last character (;)
 }
 
-get_linux_vars() {
+get_linux_details() {
     BATTERY_DETAILS=$(upower -i $(upower -e | grep 'BAT'))
     
     # Exit if no batery exists.
@@ -125,10 +125,10 @@ fi
 
 case $(uname) in
     "Darwin")
-	get_darwin_vars
+	get_darwin_details
 	;;
     "Linux")
-	get_linux_vars
+	get_linux_details
 	;;
 esac
 
