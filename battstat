@@ -130,6 +130,10 @@ case $(uname) in
     "Linux")
 	get_linux_details
 	;;
+    *)
+	echo "battstat: operating system not supported"
+	exit 1
+	;;
 esac
 
 while test $# -gt 0; do
