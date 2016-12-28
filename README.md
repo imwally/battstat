@@ -35,6 +35,10 @@ $ battstat -d "Battery:" {i} {p}
 * __Linux__: Details are collected via `upower(1)`.
 * __OpenBSD__: Details are collected via `apm(8)`.
 
+## Notes
+
+The script does not account for laptops with multiple batteries. Newer ThinkPad models include both a swappable and non-swappable battery which may cause problems when searching for the battery with `upower`. I currently don't have the means necessary to test against these models but pull requests are of course welcomed.
+
 ## Install
 
 First grab the script. Here are a few options:
