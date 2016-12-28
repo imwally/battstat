@@ -33,6 +33,7 @@ $ battstat -d "Battery:" {i} {p}
 
 * __macOS__: Details are collected via `pmset(1)`.
 * __Linux__: Details are collected via `upower(1)`.
+* __OpenBSD__: Details are collected via `apm(8)`.
 
 ## Install
 
