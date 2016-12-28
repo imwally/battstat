@@ -79,6 +79,30 @@ get_linux_details() {
     TIME=$HOURS:$MINUTES
 }
 
+get_openbsd_details() {
+    BATTERY_DETAILS=$(apm)
+
+    # Exit if no battery exists.
+    if [ -z "$BATTERY_DETAILS" ]; then
+	exit_no_battery
+    fi
+
+    CHARGED=$(echo $BATTERY_DETAILS | grep '100%')
+    CHARGING=$(echo $BATTERY_DETAILS | grep -w 'state: connected')
+    DISCHARGING=$(echo $BATTERY_DETAILS | grep -w 'state: not connected')
+    PERCENT=$(echo $BATTERY_DETAILS | grep 'Battery state' | awk '{print $4}')
+    FULL_MINUTES=$(echo $BATTERY_DETAILS | grep 'Battery state' | awk '{print $6}')
+    HOURS=$(echo $(($FULL_MINUTES/60)))
+    MINUTES=$(echo $(($FULL_MINUTES%60)))
+
+    # Prefix 0 when minutes drop below 10.
+    if [ $(printf "%s" $MINUTES | wc -c) -eq '1' ]; then
+	MINUTES="0$MINUTES"
+    fi
+        
+    TIME=$HOURS:$MINUTES
+}
+
 hide_percent_until_charged() {
     if [ -z "$CHARGED" ]; then
 	PERCENT=""
@@ -129,6 +153,9 @@ case $(uname) in
 	;;
     "Linux")
 	get_linux_details
+	;;
+    "OpenBSD")
+	get_openbsd_details
 	;;
     *)
 	echo "battstat: operating system not supported"
