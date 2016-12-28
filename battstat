@@ -18,7 +18,6 @@ print_help() {
     echo "    {p}    display percent"
     echo ""
     echo "    Note: There must be a space between each format token."
-
 }
 
 exit_no_battery() {
