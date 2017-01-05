@@ -61,8 +61,8 @@ usage: battstat [options] format
 
 options:
     -h, --help                display help information
-    -c, --charging-icon       string to display when battery is charging
-    -d, --discharging-icon    string to display when battery is discharging
+    -c, --charging-icon       string to display in icon's place when battery is charging
+    -d, --discharging-icon    string to display in icon's place when battery is discharging
     --percent-when-charged    only display percent when charged
 
 format:
