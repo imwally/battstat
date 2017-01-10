@@ -10,7 +10,7 @@ Information is displayed in the order the format tokens are written. For example
 
 ## Examples
 
-There are a few ways to customize the output of `battstat`. Charging and discharging icons can be replaced with single character or multi-character strings.
+There are a few ways to customize the output of `battstat`. Charging and discharging icons can be replaced with single character or multi-character strings. The `-c` flag sets the charging string and the `-d` flag sets the discharging string.
 
 ```
 $ battstat -d "🍕" {t} {i}
