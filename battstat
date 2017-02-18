@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-CHARGING_ICON="⚡"     #  U+26A1 - Thunderbolt
-DISCHARGING_ICON="🔋" # U+1F50B - Battery
+charging_icon="⚡"     #  U+26A1 - Thunderbolt
+discharging_icon="🔋" # U+1F50B - Battery
 
 print_help() {
     echo "usage: battstat [options] format"
@@ -26,118 +26,118 @@ exit_no_battery() {
 }
 
 get_darwin_details() {
-    BATTERY_DETAILS=$(pmset -g batt)
+    battery_details=$(pmset -g batt)
 
     # Exit if no battery exists.
-    if [ -z "$(echo \"$BATTERY_DETAILS\" | grep InternalBattery)" ]; then
+    if [ -z "$(echo \"$battery_details\" | grep InternalBattery)" ]; then
 	exit_no_battery
     fi
     
-    CHARGED=$(echo "$BATTERY_DETAILS" | grep -w 'charged')
-    CHARGING=$(echo "$BATTERY_DETAILS" | grep -w 'AC Power')
-    DISCHARGING=$(echo "$BATTERY_DETAILS" | grep -w 'Battery Power')
-    TIME=$(echo "$BATTERY_DETAILS" | grep 'InternalBattery' | awk '{print $5}' | grep '^[0-9]')
-    PERCENT=$(echo "$BATTERY_DETAILS" | grep 'InternalBattery' | awk '{print $3}')
-    PERCENT=${PERCENT%?} # Strips the last character (;)
+    charged=$(echo "$battery_details" | grep -w 'charged')
+    charging=$(echo "$battery_details" | grep -w 'AC Power')
+    discharging=$(echo "$battery_details" | grep -w 'Battery Power')
+    time=$(echo "$battery_details" | grep 'InternalBattery' | awk '{print $5}' | grep '^[0-9]')
+    percent=$(echo "$battery_details" | grep 'InternalBattery' | awk '{print $3}')
+    percent=${percent%?} # Strips the last character (;)
 }
 
 get_linux_details() {
-    BATTERY_DETAILS=$(upower -i $(upower -e | grep 'BAT'))
+    battery_details=$(upower -i $(upower -e | grep 'BAT'))
     
     # Exit if no batery exists.
-    if [ -z "$BATTERY_DETAILS" ]; then
+    if [ -z "$battery_details" ]; then
 	exit_no_battery
     fi
     
-    CHARGED=$(echo "$BATTERY_DETAILS" | grep 'state' | grep -w 'fully-charged')
-    CHARGING=$(echo "$BATTERY_DETAILS" | grep 'state' | grep -w 'charging')
-    DISCHARGING=$(echo "$BATTERY_DETAILS" | grep 'state' | grep -w 'discharging')
-    PERCENT=$(echo "$BATTERY_DETAILS"| grep 'percentage' | awk '{print $2}')
+    charged=$(echo "$battery_details" | grep 'state' | grep -w 'fully-charged')
+    charging=$(echo "$battery_details" | grep 'state' | grep -w 'charging')
+    discharging=$(echo "$battery_details" | grep 'state' | grep -w 'discharging')
+    percent=$(echo "$battery_details"| grep 'percentage' | awk '{print $2}')
     
-    case $(echo "$BATTERY_DETAILS" | grep 'time' | awk '{print $5}') in
+    case $(echo "$battery_details" | grep 'time' | awk '{print $5}') in
 	"hours")
-	    HOURS=$(echo "$BATTERY_DETAILS" | grep 'time' | awk '{print $4}' | cut -d . -f1)
-	    MINUTES=$(echo "$BATTERY_DETAILS" | grep 'time' | awk '{print $4}' | cut -d . -f2)
-	    MINUTES=$(echo .$MINUTES \* 60 | bc -l | cut -d. -f1)
+	    hours=$(echo "$battery_details" | grep 'time' | awk '{print $4}' | cut -d . -f1)
+	    minutes=$(echo "$battery_details" | grep 'time' | awk '{print $4}' | cut -d . -f2)
+	    minutes=$(echo .$minutes \* 60 | bc -l | cut -d. -f1)
 	    ;;
 	"minutes")
-	    MINUTES=$(echo "$BATTERY_DETAILS" | grep 'time' | awk '{print $4}' | cut -d . -f1)
+	    minutes=$(echo "$battery_details" | grep 'time' | awk '{print $4}' | cut -d . -f1)
 	    ;;
     esac
 
     # Diplay 0 in the hours spot when only minutes remain.
-    if [ -z "$HOURS" ]; then
-	HOURS="0"
+    if [ -z "$hours" ]; then
+	hours="0"
     fi
 
     # Prefix 0 when minutes drop below 10.
-    if [ $(printf "%s" $MINUTES | wc -c) -eq '1' ]; then
-	MINUTES="0$MINUTES"
+    if [ $(printf "%s" $minutes | wc -c) -eq '1' ]; then
+	minutes="0$minutes"
     fi
     
-    TIME=$HOURS:$MINUTES
+    time=$hours:$minutes
 }
 
 get_openbsd_details() {
-    BATTERY_DETAILS=$(apm)
+    battery_details=$(apm)
 
     # Exit if no battery exists.
-    if [ -z "$BATTERY_DETAILS" ]; then
+    if [ -z "$battery_details" ]; then
 	exit_no_battery
     fi
 
-    CHARGED=$(echo $BATTERY_DETAILS | grep '100%')
-    CHARGING=$(echo $BATTERY_DETAILS | grep -w 'state: connected')
-    DISCHARGING=$(echo $BATTERY_DETAILS | grep -w 'state: not connected')
-    PERCENT=$(echo $BATTERY_DETAILS | grep 'Battery state' | awk '{print $4}')
-    FULL_MINUTES=$(echo $BATTERY_DETAILS | grep 'Battery state' | awk '{print $6}')
-    HOURS=$(echo $(($FULL_MINUTES/60)))
-    MINUTES=$(echo $(($FULL_MINUTES%60)))
+    charged=$(echo $battery_details | grep '100%')
+    charging=$(echo $battery_details | grep -w 'state: connected')
+    discharging=$(echo $battery_details | grep -w 'state: not connected')
+    percent=$(echo $battery_details | grep 'Battery state' | awk '{print $4}')
+    full_minutes=$(echo $battery_details | grep 'Battery state' | awk '{print $6}')
+    hours=$(echo $(($full_minutes/60)))
+    minutes=$(echo $(($full_minutes%60)))
 
     # Prefix 0 when minutes drop below 10.
-    if [ $(printf "%s" $MINUTES | wc -c) -eq '1' ]; then
-	MINUTES="0$MINUTES"
+    if [ $(printf "%s" $minutes | wc -c) -eq '1' ]; then
+	minutes="0$minutes"
     fi
         
-    TIME=$HOURS:$MINUTES
+    time=$hours:$minutes
 }
 
 hide_percent_until_charged() {
-    if [ -z "$CHARGED" ]; then
-	PERCENT=""
+    if [ -z "$charged" ]; then
+	percent=""
     fi
 }   
 
 print_icon() {
-    if [ ! -z "$CHARGING" ] || [ ! -z "$CHARGED" ]; then
-	ICON=$CHARGING_ICON
-    elif [ ! -z "$DISCHARGING" ]; then
-	ICON=$DISCHARGING_ICON
+    if [ ! -z "$charging" ] || [ ! -z "$charged" ]; then
+	icon=$charging_icon
+    elif [ ! -z "$discharging" ]; then
+	icon=$discharging_icon
     fi
 
-    printf " %s " $ICON
+    printf " %s " $icon
 }
 
 print_time() {
     # Display "calc..." when calculating time remaining.
-    if [ -z "$TIME" ] || [ $TIME = "0:00" ]; then
-	TIME="calc..."
+    if [ -z "$time" ] || [ $time = "0:00" ]; then
+	time="calc..."
     fi
 
     # Hide time when fully charged.
-    if [ ! -z "$CHARGED" ]; then
-	TIME=""
+    if [ ! -z "$charged" ]; then
+	time=""
     fi
     
-    if [ ! -z "$TIME" ]; then
-	printf " %s " $TIME
+    if [ ! -z "$time" ]; then
+	printf " %s " $time
     fi
 
 }
 
 print_percent() {
-    if [ ! -z "$PERCENT" ]; then
-	printf " %s " $PERCENT
+    if [ ! -z "$percent" ]; then
+	printf " %s " $percent
     fi
 }
 
@@ -169,12 +169,12 @@ while test $# -gt 0; do
 	    shift
 	    ;;
 	-c|--charging-icon)
-	    CHARGING_ICON="$2"
+	    charging_icon="$2"
 	    shift
 	    shift
 	    ;;
 	-d|--discharging-icon)
-	    DISCHARGING_ICON="$2"
+	    discharging_icon="$2"
 	    shift
 	    shift
 	    ;;
