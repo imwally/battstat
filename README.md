@@ -40,7 +40,7 @@ The screenshot above is using the following shell script. Make sure the script i
 ```
 #!/bin/sh
 
-time=$(/Users/wally/Apps/bin/battstat {t})
+time=$(/usr/local/bin/battstat {t})
 
 echo "($time) | size=13"
 ```
