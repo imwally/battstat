@@ -29,6 +29,22 @@ $ battstat -d "Battery:" {i} {p}
  Battery:  81%
 ```
 
+## Menu bar
+
+![bitbar screenshot](https://github.com/imwally/battstat/blob/master/img/bitbar.png)
+
+Using [bitbar](https://github.com/matryer/bitbar) you can add the output of `battstat` to your menubar. There are many ways to customize the output so I suggest reading over the [writing plugins](https://github.com/matryer/bitbar#writing-plugins) section to understand what's possible.
+
+The screenshot above is using the following shell script. Make sure the script is executable and placed in the bitbar plugins path.
+
+```
+#!/bin/sh
+
+time=$(/Users/wally/Apps/bin/battstat {t})
+
+echo "($time) | size=13"
+```
+
 ## Supported Operating Systems
 
 * __macOS__: Details are collected via `pmset(1)`.
