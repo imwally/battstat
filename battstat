@@ -29,7 +29,7 @@ get_darwin_details() {
     battery_details=$(pmset -g batt)
 
     # Exit if no battery exists.
-    if [ -z "$(echo \"$battery_details\" | grep InternalBattery)" ]; then
+    if ! echo "$battery_details" | grep -q InternalBattery; then
 	exit_no_battery
     fi
     
