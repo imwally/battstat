@@ -33,7 +33,7 @@ $ battstat -d "Battery:" {i} {p}
 
 ![bitbar screenshot](https://github.com/imwally/battstat/blob/master/img/bitbar.png)
 
-Using [bitbar](https://github.com/matryer/bitbar) you can add the output of `battstat` to your menubar. There are many ways to customize the output so I suggest reading over the [writing plugins](https://github.com/matryer/bitbar#writing-plugins) section to understand what's possible.
+Using [bitbar](https://github.com/matryer/bitbar) you can add the output of `battstat` to the menu bar on macOS. There are many ways to customize the output so I suggest reading over the [writing plugins](https://github.com/matryer/bitbar#writing-plugins) section to understand what's possible.
 
 The screenshot above is using the following shell script. Make sure the script is executable and placed in the bitbar plugins path.
 
