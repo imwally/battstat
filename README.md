@@ -29,7 +29,7 @@ $ battstat -d "Battery:" {i} {p}
  Battery:  81%
 ```
 
-## Menu bar
+## macOS menu bar
 
 ![bitbar screenshot](https://github.com/imwally/battstat/blob/master/img/bitbar.png)
 
