@@ -70,7 +70,7 @@ get_linux_details() {
     fi
 
     # Prefix 0 when minutes drop below 10.
-    if [ $(printf "%s" $minutes | wc -c) -eq '1' ]; then
+    if [ ${#minutes} -eq '1' ]; then
 	minutes="0$minutes"
     fi
     
