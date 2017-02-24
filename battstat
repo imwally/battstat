@@ -41,7 +41,7 @@ get_darwin_details() {
 }
 
 get_linux_details() {
-    battery_details=$(upower -i $(upower -e | grep 'BAT'))
+    battery_details=$(LC_ALL=en_US.UTF-8 upower -i $(upower -e | grep 'BAT'))
     
     # Exit if no batery exists.
     if [ -z "$battery_details" ]; then
