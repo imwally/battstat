@@ -88,13 +88,13 @@ get_openbsd_details() {
     charged=$(echo $battery_details | grep '100%')
     charging=$(echo $battery_details | grep -w 'state: connected')
     discharging=$(echo $battery_details | grep -w 'state: not connected')
-    percent=$(echo $battery_details | grep 'Battery state' | awk '{print $4}')
-    full_minutes=$(echo $battery_details | grep 'Battery state' | awk '{print $6}')
-    hours=$(echo $(($full_minutes/60)))
-    minutes=$(echo $(($full_minutes%60)))
+    percent=$(echo $battery_details | grep -o '[0-9]*%')
+    full_minutes=$(echo $battery_details | grep -o ' [0-9]* ')
+    hours=$(($full_minutes/60))
+    minutes=$(($full_minutes%60))
 
     # Prefix 0 when minutes drop below 10.
-    if [ $(printf "%s" $minutes | wc -c) -eq '1' ]; then
+    if [ ${#minutes} -eq '1' ]; then
 	minutes="0$minutes"
     fi
         
