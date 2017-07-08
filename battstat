@@ -85,20 +85,28 @@ get_openbsd_details() {
 	exit_no_battery
     fi
 
-    charged=$(echo $battery_details | grep '100%')
     charging=$(echo $battery_details | grep -w 'state: connected')
     discharging=$(echo $battery_details | grep -w 'state: not connected')
     percent=$(echo $battery_details | grep -o '[0-9]*%')
     full_minutes=$(echo $battery_details | grep -o ' [0-9]* ')
-    hours=$(($full_minutes/60))
-    minutes=$(($full_minutes%60))
 
-    # Prefix 0 when minutes drop below 10.
-    if [ ${#minutes} -eq '1' ]; then
-	minutes="0$minutes"
+    # Battery is considered charged when AC is connected and 100%
+    if [ ! -z "$charging" ] && [ $percent = "100%" ]; then
+        charged="charged"
     fi
+   
+    # Only compute time when available
+    if [ ! -z "$full_minutes" ]; then
+        hours=$(($full_minutes/60))
+        minutes=$(($full_minutes%60))
+
+        # Prefix 0 when minutes drop below 10.
+        if [ ${#minutes} -eq '1' ]; then
+	    minutes="0$minutes"
+        fi
         
-    time=$hours:$minutes
+        time=$hours:$minutes
+    fi
 }
 
 hide_percent_until_charged() {
