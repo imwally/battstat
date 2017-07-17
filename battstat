@@ -148,7 +148,7 @@ print_percent() {
     fi
 }
 
-if [ $# -eq 0 ] || [ $1 = "-h" ] || [ $1 = "--help" ]; then
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     print_help
     exit 0
 fi
@@ -168,6 +168,12 @@ case $(uname) in
 	exit 1
 	;;
 esac
+
+if [ $# -eq 0 ]; then
+    print_time
+    print_percent
+    print_icon
+fi
 
 while test $# -gt 0; do
     case "$1" in
