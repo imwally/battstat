@@ -57,13 +57,13 @@ The script does not account for laptops with multiple batteries. Newer ThinkPad 
 
 ## Install
 
-First grab the script. Here are a few options:
+1. Grab the script. Here are a few options:
 
-* Download and extract the [zip](https://github.com/imwally/battstat/archive/master.zip).
-* `$ git clone https://github.com/imwally/battstat`
-* `$ curl -O https://raw.githubusercontent.com/imwally/battstat/master/battstat`
+    * Download and extract the [zip](https://github.com/imwally/battstat/archive/master.zip).
+    * `$ git clone https://github.com/imwally/battstat`
+    * `$ curl -O https://raw.githubusercontent.com/imwally/battstat/master/battstat`
 
-Then move it to your favorite binary path and make it executable.
+2. Move it to your favorite binary path and make it executable.
 
 ```
 $ mv battstat /usr/local/bin
