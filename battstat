@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-charging_icon="⚡"    #  U+26A1 - Thunderbolt
+charging_icon="⚡"    # U+26A1  - Thunderbolt
 discharging_icon="🔋" # U+1F50B - Battery
 format="{t} {p} {i}"
 
