@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-charging_icon="⚡"     # U+26A1  - Thunderbolt
+charging_icon="⚡"    # U+26A1  - Thunderbolt
 discharging_icon="🔋" # U+1F50B - Battery
 format=false          # Track whether formatting was supplied from the user
 
@@ -170,7 +170,6 @@ case $(uname) in
 	;;
 esac
 
-
 while test $# -gt 0; do
 	case "$1" in
 	--percent-when-charged)
@@ -188,33 +187,32 @@ while test $# -gt 0; do
 		shift
 		;;
 	{i})
-    format=true
-	  print_icon
-	  shift
-	  ;;
+		format=true
+		print_icon
+		shift
+		;;
 	{t})
-    format=true
-	   print_time
-	   shift
-	   ;;
+		format=true
+		print_time
+		shift
+		;;
 	{p})
-     format=true
-	   print_percent
-	   shift
-	   ;;
+		format=true
+		print_percent
+		shift
+		;;
 	*)
-		 print_help
-		 break
-		 ;;
+		print_help
+		break
+		;;
 	esac
 done
 
-if [ "$format" = false ]
-then
-    # No format was provided by the user, so print the default format
-    print_time
-    print_percent
-    print_icon
+if [ "$format" = false ]; then
+	# No format was provided by the user, so print the default format
+	print_time
+	print_percent
+	print_icon
 fi
 
 printf "\n"
