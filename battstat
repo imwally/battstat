@@ -136,7 +136,6 @@ set_time() {
 	fi
 }
 
-
 if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
 	print_help
 	exit 0
@@ -158,7 +157,6 @@ case $(uname) in
 	;;
 esac
 
-
 while test $# -gt 0; do
 	case "$1" in
 	--percent-when-charged)
@@ -175,14 +173,14 @@ while test $# -gt 0; do
 		shift
 		shift
 		;;
-        -f | --format)
-                format="$2"
-                shift
-                shift
-                ;;
+	-f | --format)
+		format="$2"
+		shift
+		shift
+		;;
 	*)
 		print_help
-                format=""
+		format=""
 		break
 		;;
 	esac
@@ -192,5 +190,5 @@ set_icon
 set_time
 
 if [ ! -z "$format" ]; then
-        echo $format | sed "s/{t}/$time/g;s/{p}/$percent/g;s/{i}/$icon/g"
+	echo $format | sed "s/{t}/$time/g;s/{p}/$percent/g;s/{i}/$icon/g"
 fi
