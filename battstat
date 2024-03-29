@@ -2,7 +2,7 @@
 
 charging_icon="⚡"    # U+26A1  - Thunderbolt
 discharging_icon="🔋" # U+1F50B - Battery
-format=false          # Track whether formatting was supplied from the user
+format="{t} {p} {i}"
 
 print_help() {
 	echo "usage: battstat [options] format"
@@ -11,14 +11,16 @@ print_help() {
 	echo "    -h, --help                display help information"
 	echo "    -c, --charging-icon       string to display in icon's place when battery is charging"
 	echo "    -d, --discharging-icon    string to display in icon's place when battery is discharging"
+	echo "    -f, --format              formatted output of battstat"
 	echo "    --percent-when-charged    only display percent when charged"
 	echo ""
-	echo "format:"
+	echo "format replacement tokens:"
 	echo "    {i}    display icon"
 	echo "    {t}    display time remaining"
 	echo "    {p}    display percent"
 	echo ""
-	echo "    Note: There must be a space between each format token."
+	echo "example:"
+	echo "    battstat -f \"Cool Battery: {t} ({p})\""
 }
 
 exit_no_battery() {
@@ -116,17 +118,15 @@ hide_percent_until_charged() {
 	fi
 }
 
-print_icon() {
+set_icon() {
 	if [ ! -z "$charging" ] || [ ! -z "$charged" ]; then
 		icon=$charging_icon
 	elif [ ! -z "$discharging" ]; then
 		icon=$discharging_icon
 	fi
-
-	printf " %s " $icon
 }
 
-print_time() {
+set_time() {
 	# Display "calc..." when calculating time remaining.
 	if [ -z "$time" ] || [ $time = "0:00" ]; then
 		time="calc..."
@@ -135,17 +135,6 @@ print_time() {
 	# Hide time when fully charged.
 	if [ ! -z "$charged" ]; then
 		time=""
-	fi
-
-	if [ ! -z "$time" ]; then
-		printf " %s " $time
-	fi
-
-}
-
-print_percent() {
-	if [ ! -z "$percent" ]; then
-		printf " %s " $percent
 	fi
 }
 
@@ -186,33 +175,22 @@ while test $# -gt 0; do
 		shift
 		shift
 		;;
-	{i})
-		format=true
-		print_icon
+	-f | --format)
+		format="$2"
 		shift
-		;;
-	{t})
-		format=true
-		print_time
-		shift
-		;;
-	{p})
-		format=true
-		print_percent
 		shift
 		;;
 	*)
 		print_help
+		format=""
 		break
 		;;
 	esac
 done
 
-if [ "$format" = false ]; then
-	# No format was provided by the user, so print the default format
-	print_time
-	print_percent
-	print_icon
-fi
+set_icon
+set_time
 
-printf "\n"
+if [ ! -z "$format" ]; then
+	echo $format | sed "s/{t}/$time/g;s/{p}/$percent/g;s/{i}/$icon/g"
+fi
