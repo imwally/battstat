@@ -22,7 +22,7 @@ BAT: 74% 11:35
 Battery: 74%
 ```
 
-## printf Formatting
+## Formatting
 
 `battstat` uses printf style formatting when using the `-f` flag. This means you can print replacement tokens however you want.
 
