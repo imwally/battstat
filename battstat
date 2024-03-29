@@ -11,14 +11,16 @@ print_help() {
 	echo "    -h, --help                display help information"
 	echo "    -c, --charging-icon       string to display in icon's place when battery is charging"
 	echo "    -d, --discharging-icon    string to display in icon's place when battery is discharging"
+	echo "    -f, --format              formatted output of battstat"
 	echo "    --percent-when-charged    only display percent when charged"
 	echo ""
-	echo "format:"
+	echo "format replacement tokens:"
 	echo "    {i}    display icon"
 	echo "    {t}    display time remaining"
 	echo "    {p}    display percent"
 	echo ""
-	echo "    Note: There must be a space between each format token."
+	echo "example:"
+	echo "    battstat -f \"Cool Battery: {t} ({p})\""
 }
 
 exit_no_battery() {
